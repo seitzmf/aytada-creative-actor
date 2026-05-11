@@ -15,38 +15,90 @@ interface Input {
     productDescription: string;
     awarenessStage: string;
     adType: string;
+    industry?: string;
 }
 
 const input = await Actor.getInput<Input>();
 
 if (!input) {
-    throw new Error('No input provided!');
+    throw new Error('No input provided! Please check the input tab in your Apify actor configuration.');
 }
 
-const { apiKey, productName, productDescription, awarenessStage, adType } = input;
+const { apiKey, productName, productDescription, awarenessStage, adType, industry = 'general' } = input;
 
-console.log(`Starting generation for: ${productName} (${awarenessStage})`);
+if (!apiKey) {
+    throw new Error('API Key is required! Please provide your AYTADA API key.');
+}
+
+console.log(`🚀 Starting generation for: "${productName}"`);
+console.log(`📍 Awareness Stage: ${awarenessStage}`);
+console.log(`🎨 Ad Type: ${adType}`);
 
 try {
-    // Note: In the final implementation, this will call https://aytada.app/api/v1/creative/ideas
-    console.log('Sending request to AYTADA Creative Engine...');
+    const API_URL = 'https://aytada.app/api/v1/creative/ideas';
     
-    // Placeholder for actual API call
-    const result = {
-        status: 'success',
-        message: `This is a skeleton response. In the next phase, we will connect this to the live AYTADA V1 API for ${productName}.`,
-        context: {
-            adType,
-            awarenessStage
-        }
-    };
+    console.log('📡 Communicating with AYTADA Creative Engine...');
+    
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-AYTADA-API-KEY': apiKey,
+        },
+        body: JSON.stringify({
+            product: {
+                name: productName,
+                description: productDescription
+            },
+            avatar: {
+                awareness_stage: awarenessStage
+            },
+            config: {
+                adType,
+                industry
+            }
+        }),
+    });
 
-    await Actor.pushData(result);
+    if (!response.ok) {
+        const errorData = await response.json() as any;
+        const msg = errorData.message || errorData.error || 'Unknown API error';
+        
+        if (response.status === 401) {
+            throw new Error(`Authentication Failed: ${msg}. Please check if your API key is correct and active.`);
+        }
+        if (response.status === 402) {
+            throw new Error(`Insufficient Credits: ${msg}. Please top up your credits in the AYTADA dashboard.`);
+        }
+        
+        throw new Error(`AYTADA API Error (${response.status}): ${msg}`);
+    }
+
+    const result = await response.json() as any;
     
-    console.log('Generation completed successfully.');
+    if (result.status === 'success' && result.data?.ideas) {
+        console.log(`✅ Successfully generated ${result.data.ideas.length} ad concepts.`);
+        
+        // Push each idea to the Apify dataset
+        for (const idea of result.data.ideas) {
+            await Actor.pushData({
+                productName,
+                awarenessStage,
+                adType,
+                ...idea,
+                generatedAt: new Date().toISOString()
+            });
+        }
+        
+        console.log('📊 Results have been pushed to the dataset.');
+    } else {
+        throw new Error('The API returned an unexpected response format.');
+    }
+
 } catch (error) {
-    console.error('Generation failed:', error);
-    await Actor.fail('Failed to generate creative assets.');
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred during generation';
+    console.error(`❌ Generation failed: ${errorMessage}`);
+    await Actor.fail(errorMessage);
 }
 
 await Actor.exit();

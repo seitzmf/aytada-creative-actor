@@ -1,45 +1,57 @@
 {
     "title": "AYTADA Creative Intelligence Input",
+    "description": "Generate high-converting ad concepts and scripts using Eugene Schwartz's 5 Stages of Awareness.",
     "type": "object",
     "schemaVersion": 1,
     "properties": {
         "apiKey": {
             "title": "AYTADA API Key",
             "type": "string",
-            "description": "Your AYTADA API Key (Get it from your dashboard)",
+            "description": "Your private API key starting with 'sb_live_'. Find this in your AYTADA dashboard settings.",
             "editor": "textfield",
-            "prefill": "sb_..."
+            "isSecret": true,
+            "prefill": "sb_live_..."
         },
         "productName": {
             "title": "Product Name",
             "type": "string",
-            "description": "The name of your product or service",
-            "editor": "textfield"
+            "description": "The exact name of the product or brand you are promoting.",
+            "editor": "textfield",
+            "sectionCaption": "Product Information"
         },
         "productDescription": {
             "title": "Product Description",
             "type": "string",
-            "description": "Detailed description of what you are selling",
+            "description": "A detailed explanation of benefits, features, and the problem it solves.",
             "editor": "textarea"
+        },
+        "industry": {
+            "title": "Industry",
+            "type": "string",
+            "description": "The industry sector (e.g., Beauty, SaaS, Real Estate).",
+            "editor": "textfield",
+            "default": "general"
         },
         "awarenessStage": {
             "title": "Customer Awareness Stage",
             "type": "string",
-            "description": "Eugene Schwartz's Five Stages of Awareness",
+            "description": "Select the psychological stage of your target audience.",
             "editor": "select",
             "default": "problem_aware",
             "enum": ["unaware", "problem_aware", "solution_aware", "product_aware", "most_aware"],
             "enumTitles": [
-                "Unaware (Don't know they have a problem)",
-                "Problem Aware (Know the pain, no solution)",
-                "Solution Aware (Know solutions exist)",
-                "Product Aware (Know your product)",
-                "Most Aware (Ready to buy)"
-            ]
+                "Unaware (Problem identity & storytelling)",
+                "Problem Aware (Validation & naming the pain)",
+                "Solution Aware (Category guidance & trust)",
+                "Product Aware (Addressing objections & demo)",
+                "Most Aware (Offers, urgency & CTA)"
+            ],
+            "sectionCaption": "Strategic Context"
         },
         "adType": {
             "title": "Ad Type",
             "type": "string",
+            "description": "The format of the creative asset you want to generate ideas for.",
             "editor": "select",
             "default": "video",
             "enum": ["video", "banner", "flyer", "jingle"],

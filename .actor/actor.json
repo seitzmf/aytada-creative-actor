@@ -5,6 +5,7 @@
     "description": "Generate strategic ad concepts, scripts, and campaign frameworks based on brand DNA and customer awareness stages.",
     "version": "1.0.0",
     "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
     "meta": {
         "generatedBy": "Antigravity with Gemini 2.0 Flash"
     }

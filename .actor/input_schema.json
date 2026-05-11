@@ -1,0 +1,50 @@
+{
+    "title": "AYTADA Creative Intelligence Input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "apiKey": {
+            "title": "AYTADA API Key",
+            "type": "string",
+            "description": "Your AYTADA API Key (Get it from your dashboard)",
+            "editor": "textfield",
+            "prefill": "sb_..."
+        },
+        "productName": {
+            "title": "Product Name",
+            "type": "string",
+            "description": "The name of your product or service",
+            "editor": "textfield"
+        },
+        "productDescription": {
+            "title": "Product Description",
+            "type": "string",
+            "description": "Detailed description of what you are selling",
+            "editor": "textarea"
+        },
+        "awarenessStage": {
+            "title": "Customer Awareness Stage",
+            "type": "string",
+            "description": "Eugene Schwartz's Five Stages of Awareness",
+            "editor": "select",
+            "default": "problem_aware",
+            "enum": ["unaware", "problem_aware", "solution_aware", "product_aware", "most_aware"],
+            "enumTitles": [
+                "Unaware (Don't know they have a problem)",
+                "Problem Aware (Know the pain, no solution)",
+                "Solution Aware (Know solutions exist)",
+                "Product Aware (Know your product)",
+                "Most Aware (Ready to buy)"
+            ]
+        },
+        "adType": {
+            "title": "Ad Type",
+            "type": "string",
+            "editor": "select",
+            "default": "video",
+            "enum": ["video", "banner", "flyer", "jingle"],
+            "enumTitles": ["Video Ad", "Social Media Banner", "Print Flyer", "Audio Jingle"]
+        }
+    },
+    "required": ["apiKey", "productName", "productDescription", "awarenessStage"]
+}

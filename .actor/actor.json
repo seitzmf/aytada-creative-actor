@@ -1,0 +1,11 @@
+{
+    "actorSpecification": 1,
+    "name": "aytada-creative-intelligence",
+    "title": "AYTADA Creative Intelligence",
+    "description": "Generate strategic ad concepts, scripts, and campaign frameworks based on brand DNA and customer awareness stages.",
+    "version": "1.0.0",
+    "dockerfile": "./Dockerfile",
+    "meta": {
+        "generatedBy": "Antigravity with Gemini 2.0 Flash"
+    }
+}
